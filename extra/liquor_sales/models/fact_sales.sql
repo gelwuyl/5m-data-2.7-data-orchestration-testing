@@ -6,7 +6,7 @@ SELECT
     state_bottle_cost,
     state_bottle_retail,
     bottles_sold,
-    sale_dollars,
+    ROUND(CAST(bottles_sold AS NUMERIC) * CAST(state_bottle_retail AS NUMERIC), 2) AS sale_dollars,
     volume_sold_liters,
     volume_sold_gallons
 FROM {{ source('iowa_liquor_sales', 'sales') }}
