@@ -65,6 +65,10 @@ packages:
 
 Run `dbt deps` to install the package. Refer to the [documentation](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) for supported tests.
 
+```bash
+dbt deps
+```
+
 Let's add some additional tests to the `fact_sales` model at the end of `models/schema.yml`:
 
 ```yml
@@ -139,6 +143,10 @@ Add the following to `packages.yml`:
 
 Run `dbt deps` to install the package. Refer to the [documentation](https://hub.getdbt.com/calogica/dbt_expectations/latest/) for supported tests.
 
+```bash
+dbt deps
+```
+
 Let's add some tests to check the column types in `fact_sales`:
 
 ```yml
@@ -164,6 +172,10 @@ If you have not, create the conda environment based on the `dagster_environment.
 
 We will be using the `dagster` environment. Use the command `conda activate dagster` to activate the environment.
 
+```bash
+conda activate dagster
+```
+
 This will be covered in class, with demo on `extra/dagster_orchestration_dbt`.
 
 This `dagster_orchestration_dbt` project demonstrates the following:
@@ -184,6 +196,10 @@ Note that to run dagster successfully, you need to:
     ```
 2. In `extra/dagster_orchestration_dbt/profiles.yml`, enter your GCP project ID in `project:`
 3. Since the DBT job inserts data in your BigQuery, you are reminded to do `gcloud auth application-default login` to authenticate yourself to your GCP project
+
+```bash
+gcloud auth application-default login
+```
 
 After the configuration above, we can run dagster using the command below:
 ```bash
@@ -228,7 +244,11 @@ cd meltano-orchestration
 
 ### Using the Dagster Subprocess
 
-Replace the content of `meltano-orchestration/meltano_orchestration/assets.py` with the following and also please change the path `cwd = '/path/to/your/folder/meltano_resale_in_lesson_2_6'`  and `cwd = '/path/to/your/folder/resale_flat_in_lesson_2_6'` with your respective path in lesson 2.6:
+Replace the content of `meltano-orchestration/meltano_orchestration/assets.py` with the following and also please change the path
+
+`cwd = '/path/to/your/folder/meltano_resale_in_lesson_2_6'`  and 
+
+`cwd = '/path/to/your/folder/resale_flat_in_lesson_2_6'` with your respective path in lesson 2.6:
 
 ```python
 # assets.py
@@ -341,7 +361,7 @@ resale_flat:
 
 Please use the above format in order to be compatible with Dagster. 
 
-Then create a new Dagster project that points to the directory.
+Then create a new Dagster project that points to the directory. Replace `#full-path-to-the-resale-flat-dbt-project-directory` with the actual project path (example: `/Users/Dev/5m-data-2.6-data-pipelines-orchestration/resale_flat`)
 
 ```bash
 dagster-dbt project scaffold --project-name resale_flat_dagster --dbt-project-dir #full-path-to-the-resale-flat-dbt-project-directory
@@ -361,7 +381,7 @@ We can now trigger the Dbt pipeline from within Dagster by selecting the assets 
 To set up the scheduler, follow the steps below.
 
 In `resale_flat_dagster/resale_flat_dagster/schedules.py`, enter the following code and save:
-```
+```python
 from dagster_dbt import build_schedule_from_dbt_selection
 
 from .assets import resale_flat_dbt_assets
@@ -381,7 +401,7 @@ jobs = [materialize_dbt_job]
 ```
 
 In `resale_flat_dagster/resale_flat_dagster/definitions.py`, enter the following code and save:
-```
+```python
 from dagster import Definitions
 from dagster_dbt import DbtCliResource
 from .assets import resale_flat_dbt_assets
