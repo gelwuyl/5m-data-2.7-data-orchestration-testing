@@ -139,6 +139,10 @@ Add the following to `packages.yml`:
 
 Run `dbt deps` to install the package. Refer to the [documentation](https://hub.getdbt.com/calogica/dbt_expectations/latest/) for supported tests.
 
+```bash
+dbt deps
+```
+
 Let's add some tests to check the column types in `fact_sales`:
 
 ```yml
@@ -164,6 +168,10 @@ If you have not, create the conda environment based on the `dagster_environment.
 
 We will be using the `dagster` environment. Use the command `conda activate dagster` to activate the environment.
 
+```bash
+conda activate dagster
+```
+
 This will be covered in class, with demo on `extra/dagster_orchestration_dbt`.
 
 This `dagster_orchestration_dbt` project demonstrates the following:
@@ -184,6 +192,10 @@ Note that to run dagster successfully, you need to:
     ```
 2. In `extra/dagster_orchestration_dbt/profiles.yml`, enter your GCP project ID in `project:`
 3. Since the DBT job inserts data in your BigQuery, you are reminded to do `gcloud auth application-default login` to authenticate yourself to your GCP project
+
+```bash
+gcloud auth application-default login
+```
 
 After the configuration above, we can run dagster using the command below:
 ```bash
@@ -361,7 +373,7 @@ We can now trigger the Dbt pipeline from within Dagster by selecting the assets 
 To set up the scheduler, follow the steps below.
 
 In `resale_flat_dagster/resale_flat_dagster/schedules.py`, enter the following code and save:
-```
+```python
 from dagster_dbt import build_schedule_from_dbt_selection
 
 from .assets import resale_flat_dbt_assets
@@ -381,7 +393,7 @@ jobs = [materialize_dbt_job]
 ```
 
 In `resale_flat_dagster/resale_flat_dagster/definitions.py`, enter the following code and save:
-```
+```python
 from dagster import Definitions
 from dagster_dbt import DbtCliResource
 from .assets import resale_flat_dbt_assets
