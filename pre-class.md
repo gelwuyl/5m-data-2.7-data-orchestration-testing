@@ -32,7 +32,7 @@ Data quality is the unsexy, career-defining skill. A pipeline that runs successf
 ```mermaid
 flowchart LR
     E[Extract] --> L[Load]
-    L --> GX[Great Expectations<br/>(validation)]
+    L --> GX[Great Expectations\n(validation)]
     GX --> T[Transform (dbt)]
     T --> DBT[dbt Tests]
     DBT --> A[Alert / downstream]
