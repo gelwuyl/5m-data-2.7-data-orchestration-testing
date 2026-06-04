@@ -13,12 +13,10 @@ Data quality is the unsexy, career-defining skill. A pipeline that runs successf
 ## Key concepts
 
 **Data Quality Testing with Great Expectations** — Write "expectations" (rules) about your data: this column should never be null, this value should be between 0 and 10,000, this date should not be in the future. These rules run automatically and produce validation reports. An expectation like "order_total must be positive" catches the negative-revenue bug before it hits the dashboard.  
-*Stage:* Runs after the Load (L) step, before Transform (T). Independent GX project executed via the GX CLI or UI.
+*->Stage where this is Run:* after the Load (L) step, before Transform (T). Independent GX project executed via the GX CLI or UI.
 
 **dbt Testing** — dbt's built-in tests cover basics (unique, not_null, accepted_values, relationships). The `dbt_utils` and `dbt-expectations` packages extend this dramatically — range checks, expression validation, cross-column consistency. Testing is integrated into `dbt build`, so every model run includes its quality checks.  
-*Stage:* Runs during the Transform (T) step, executed as part of the dbt run/test phase.
-
-**Orchestrating Multi-Tool Pipelines** — In production, your pipeline isn't "run dbt." It's "extract from Postgres, load to BigQuery, run transformations, run tests, alert on failure." Dagster orchestrates this entire chain as a single observable workflow.
+*->Stage where this is Run:* during the Transform (T) step, executed as part of the dbt run/test phase.
 
 **Comparison of Part 1 and Part 2**
 
@@ -37,3 +35,5 @@ flowchart LR
     T --> DBT[dbt Tests]
     DBT --> A[Alert]
 ```
+
+**Orchestrating Multi-Tool Pipelines** — In production, your pipeline isn't "run dbt." It's "extract from Postgres, load to BigQuery, run transformations, run tests, alert on failure." Dagster orchestrates this entire chain as a single observable workflow.
