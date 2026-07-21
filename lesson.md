@@ -20,9 +20,9 @@ We will also dive into the concept of data testing, which is an important part o
 
 ### Background
 
-Data testing is an important part of data quality management. It is the process of verifying that data satisfies the expected properties. It is also known as data validation, data quality assurance, d[...]
+Data testing is an important part of data quality management. It is the process of verifying that data satisfies the expected properties. It is also known as data validation, data quality assurance, data quality control, data quality assessment, etc.
 
-Great Expectations is an open-source library for data testing. It is a Python library that helps you write, organize, evaluate, and share your data validation. It also provides a user interface for vi[...]
+Great Expectations is an open-source library for data testing. It is a Python library that helps you write, organize, evaluate, and share your data validation. It also provides a user interface for visualizing the results of the data tests. It can be used with any data source such as files, databases, data lakes, etc.
 
 ![great_expectations](assets/great_expectation.png)
 
@@ -100,11 +100,11 @@ For incremental data loads, use timestamps (created_at, updated_at) or unique id
 
 ## Part 2 - Testing Dbt (dbt Expectation)
 
-Back in unit 2.5, we configured some simple tests in dbt to check for _null values_, _uniqueness_ and _foreign key constraints_. We have copied the dbt project `liquor_sales` from unit 2.5 to this uni[...]
+Back in unit 2.5, we configured some simple tests in dbt to check for _null values_, _uniqueness_ and _foreign key constraints_. We have copied the dbt project `liquor_sales` from unit 2.5 to this unit, located in the `extra` folder. You can find the tests in the `schema.yml` files in the `/models` directory.
 
 Please update your GCP project ID in `profiles.yml`.
 
-However, the built-in tests are limited in scope and functionality. We can expand on the tests using `dbt_utils`- a utility macros package for dbt and `dbt-expectations`- an extension package for dbt [...]
+However, the built-in tests are limited in scope and functionality. We can expand on the tests using `dbt_utils`- a utility macros package for dbt and `dbt-expectations`- an extension package for dbt inspired by Great Expectations to write more comprehensive tests.
 
 ### Installing and Configuring `dbt_utils`
 
@@ -120,7 +120,7 @@ We will be using the same `elt` conda environment. The `liquor_sales` dbt projec
 cd extra/liquor_sales
 ```
 
-> To facilitate coding in class, all the following code are written but commented out. Please uncomment each section, please block them and use the key combination  (Mac:`cmd+/` or WSL:`ctrl+/`) to un[...]
+> To facilitate coding in class, all the following code are written but commented out. Please uncomment each section, please block them and use the key combination  (Mac:`cmd+/` or WSL:`ctrl+/`) to uncomment the configuration. 
 
 Open the file`packages.yml`:
 
@@ -235,7 +235,7 @@ Let's add some tests to check the column types in `fact_sales`:
 --- 
 
 ## Extra - Hands-on with Orchestration I (Optional)
-If you have not, create the conda environment based on the `dagster_environment.yml` file in the [environment](https://github.com/su-ntu-ctp/5m-data-2.1-intro-big-data-eng/tree/main/environments) fold[...]
+If you have not, create the conda environment based on the `dagster_environment.yml` file in the [environment](https://github.com/su-ntu-ctp/5m-data-2.1-intro-big-data-eng/tree/main/environments) folder. 
 
 We will be using the `dagster` environment. Use the command `conda activate dagster` to activate the environment.
 
@@ -285,17 +285,17 @@ Please check the following screenshot:
 
 ## Extra - Hands-on with Orchestration II Using Dagster Subprocess (Optional)
 
-In the previous unit, combining Meltano and Dbt, we have an end-to-end ELT (data ingestion and transformation) pipeline. However, we ran the pipelines manually. Now, we will use Dagster to orches[...]
+In the previous unit, combining Meltano and Dbt, we have an end-to-end ELT (data ingestion and transformation) pipeline. However, we ran the pipelines manually. Now, we will use Dagster to orchestrate the pipelines and schedule them to run periodically.
 
 ### Background
 
-We can orchestrate Meltano and Dbt pipelines using Dagster. By executing the commands from within Dagster, we get to take full advantage of its capabilities such as scheduling, dependency management, [...]
+We can orchestrate Meltano and Dbt pipelines using Dagster. By executing the commands from within Dagster, we get to take full advantage of its capabilities such as scheduling, dependency management, end-to-end testing, partitioning and more.
 
 ![dagster](assets/dagster_meltano.png)
 
 ### Create a Dagster Project
 
-We will be using the meltano project we created in module 2.6. Make sure we are not in any subfolder. The pre-requisite of this exercise is that you need to complete the exercise to create a meltano p[...]
+We will be using the meltano project we created in module 2.6. Make sure we are not in any subfolder. The pre-requisite of this exercise is that you need to complete the exercise to create a meltano project that extract data from Postgres and load into BigQuery. You also need to complete the exercise to create a HDB resale dbt project in lesson 2.6.
 
 First, we will create a Dagster project and use it to orchestrate the Meltano pipelines.
 
@@ -423,12 +423,12 @@ resale_flat:
       project: #your-GCP-project-id
       threads: 1
       type: bigquery
-   target: dev
+  target: dev
 ```
 
 Please use the above format in order to be compatible with Dagster. 
 
-Then create a new Dagster project that points to the directory. Replace `#full-path-to-the-resale-flat-dbt-project-directory` with the actual project path (example: `/Users/Dev/5m-data-2.6-data-pipeli[...]
+Then create a new Dagster project that points to the directory. Replace `#full-path-to-the-resale-flat-dbt-project-directory` with the actual project path (example: `/Users/Dev/5m-data-2.6-data-pipelines-orchestration/resale_flat`)
 
 ```bash
 dagster-dbt project scaffold --project-name resale_flat_dagster --dbt-project-dir #full-path-to-the-resale-flat-dbt-project-directory
