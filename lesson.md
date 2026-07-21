@@ -20,9 +20,9 @@ We will also dive into the concept of data testing, which is an important part o
 
 ### Background
 
-Data testing is an important part of data quality management. It is the process of verifying that data satisfies the expected properties. It is also known as data validation, data quality assurance, data quality control, data quality assessment, etc.
+Data testing is an important part of data quality management. It is the process of verifying that data satisfies the expected properties. It is also known as data validation, data quality assurance, d[...]
 
-Great Expectations is an open-source library for data testing. It is a Python library that helps you write, organize, evaluate, and share your data validation. It also provides a user interface for visualizing the results of the data tests. It can be used with any data source such as files, databases, data lakes, etc.
+Great Expectations is an open-source library for data testing. It is a Python library that helps you write, organize, evaluate, and share your data validation. It also provides a user interface for vi[...]
 
 ![great_expectations](assets/great_expectation.png)
 
@@ -30,14 +30,81 @@ Great Expectations is an open-source library for data testing. It is a Python li
 
 Please see the notebook [GX_lessons.ipynb](GX_lessons.ipynb), please attached `elt` environment to the notebook.
 
+### Great Expectations Framework & Architecture
+
+To fully leverage Great Expectations, it's important to understand its core architecture and how its components work together.
+
+**Data Context**
+
+At the foundation of Great Expectations is the Data Context, a YAML configuration file that defines your connection to data sources. This centralized configuration enables consistent validation across your data pipeline and allows you to manage all your data connections in one place.
+
+**Core Components**
+
+Great Expectations is built on several interconnected components:
+
+- **Data Source:** The connection definition to your database or data warehouse (e.g., PostgreSQL, BigQuery, Snowflake)
+- **Data Asset:** The specific table or file within your data source that you want to validate
+- **Batch Definition:** Defines what constitutes a single batch of data to validate (e.g., data from the last 24 hours, a specific date partition). This is crucial for avoiding computationally expensive full-history tests on large datasets
+- **Expectations:** Individual validation rules that check specific data properties (e.g., "this column must exist," "all values must be numeric")
+- **Expectation Suite:** A collection of multiple expectations grouped together and applied to a batch of data
+- **Checkpoint:** The execution point where the expectation suite is run against a batch, producing validation results
+- **Data Docs:** Automatically generated HTML and JSON files that provide a user-friendly visualization of your validation results and data quality metrics
+
+**Automated Profiler**
+
+Great Expectations includes a Profiler tool that can automatically analyze your data and generate default expectations based on the actual data schema and statistics. This accelerates the initial setup process and serves as a starting point for more refined, business-specific validations.
+
+### Comparing Testing Approaches: Great Expectations vs. dbt
+
+Understanding when to use each tool is essential for building effective data quality pipelines.
+
+**dbt Built-in Tests**
+
+dbt provides a set of basic, built-in tests that are easy to configure:
+- Uniqueness checks
+- Not-null constraints
+- Accepted values validation
+- Referential integrity (foreign key constraints)
+
+These tests are well-suited for simple, well-defined data quality checks that are tightly integrated with your transformation logic.
+
+**Great Expectations: Advanced Capabilities**
+
+Great Expectations offers a much broader and more sophisticated testing framework. It supports:
+- Complex, conditional logic (e.g., "only test this value if the status is not canceled")
+- Statistical validations based on distributions and percentiles
+- Pattern matching and regex validation
+- Cross-column relationships and derived metrics
+
+This flexibility makes Great Expectations ideal for comprehensive data quality monitoring across complex datasets.
+
+**The Middle Ground: dbt Expectations Package**
+
+The `dbt_expectations` package bridges the gap between the simplicity of dbt's built-in tests and the power of Great Expectations. This extension brings Great Expectations-style logic into your dbt workflow, allowing you to define advanced tests directly within your `schema.yml` file. This provides a unified testing experience without requiring a separate testing infrastructure.
+
+### Best Practices for Data Quality Testing
+
+**Start Small, Scale Gradually**
+
+When implementing new expectations, always test them on a smaller subset of your data first. This helps verify the logic is correct before running resource-intensive validations on full production datasets. Once validated, you can safely apply them to the complete dataset.
+
+**Test Ownership & Collaboration**
+
+While business users provide domain knowledge and validation requirements, data engineers are responsible for identifying and maintaining the core set of tests during model development. Clear communication between business and technical teams ensures that tests capture the right quality standards.
+
+**Batching & Incremental Data**
+
+For incremental data loads, use timestamps (created_at, updated_at) or unique identifiers as batch boundaries to isolate new records. This prevents re-testing historical data and maintains efficient validation pipelines. Always ensure proper indexing on these columns to prevent duplicate record detection issues.
+
+---
 
 ## Part 2 - Testing Dbt (dbt Expectation)
 
-Back in unit 2.5, we configured some simple tests in dbt to check for _null values_, _uniqueness_ and _foreign key constraints_. We have copied the dbt project `liquor_sales` from unit 2.5 to this unit, located in the `extra` folder. You can find the tests in the `schema.yml` files in the `/models` directory.
+Back in unit 2.5, we configured some simple tests in dbt to check for _null values_, _uniqueness_ and _foreign key constraints_. We have copied the dbt project `liquor_sales` from unit 2.5 to this uni[...]
 
 Please update your GCP project ID in `profiles.yml`.
 
-However, the built-in tests are limited in scope and functionality. We can expand on the tests using `dbt_utils`- a utility macros package for dbt and `dbt-expectations`- an extension package for dbt inspired by Great Expectations to write more comprehensive tests.
+However, the built-in tests are limited in scope and functionality. We can expand on the tests using `dbt_utils`- a utility macros package for dbt and `dbt-expectations`- an extension package for dbt [...]
 
 ### Installing and Configuring `dbt_utils`
 
@@ -53,7 +120,7 @@ We will be using the same `elt` conda environment. The `liquor_sales` dbt projec
 cd extra/liquor_sales
 ```
 
-> To facilitate coding in class, all the following code are written but commented out. Please uncomment each section, please block them and use the key combination  (Mac:`cmd+/` or WSL:`ctrl+/`) to uncomment the configuration. 
+> To facilitate coding in class, all the following code are written but commented out. Please uncomment each section, please block them and use the key combination  (Mac:`cmd+/` or WSL:`ctrl+/`) to un[...]
 
 Open the file`packages.yml`:
 
@@ -168,7 +235,7 @@ Let's add some tests to check the column types in `fact_sales`:
 --- 
 
 ## Extra - Hands-on with Orchestration I (Optional)
-If you have not, create the conda environment based on the `dagster_environment.yml` file in the [environment](https://github.com/su-ntu-ctp/5m-data-2.1-intro-big-data-eng/tree/main/environments) folder. 
+If you have not, create the conda environment based on the `dagster_environment.yml` file in the [environment](https://github.com/su-ntu-ctp/5m-data-2.1-intro-big-data-eng/tree/main/environments) fold[...]
 
 We will be using the `dagster` environment. Use the command `conda activate dagster` to activate the environment.
 
@@ -218,17 +285,17 @@ Please check the following screenshot:
 
 ## Extra - Hands-on with Orchestration II Using Dagster Subprocess (Optional)
 
-In the previous unit, combining Meltano and Dbt, we have an end-to-end ELT (data ingestion and transformation) pipeline. However, we ran the pipelines manually. Now, we will use Dagster to orchestrate the pipelines and schedule them to run periodically.
+In the previous unit, combining Meltano and Dbt, we have an end-to-end ELT (data ingestion and transformation) pipeline. However, we ran the pipelines manually. Now, we will use Dagster to orches[...]
 
 ### Background
 
-We can orchestrate Meltano and Dbt pipelines using Dagster. By executing the commands from within Dagster, we get to take full advantage of its capabilities such as scheduling, dependency management, end-to-end testing, partitioning and more.
+We can orchestrate Meltano and Dbt pipelines using Dagster. By executing the commands from within Dagster, we get to take full advantage of its capabilities such as scheduling, dependency management, [...]
 
 ![dagster](assets/dagster_meltano.png)
 
 ### Create a Dagster Project
 
-We will be using the meltano project we created in module 2.6. Make sure we are not in any subfolder. The pre-requisite of this exercise is that you need to complete the exercise to create a meltano project that extract data from Postgres and load into BigQuery. You also need to complete the exercise to create a HDB resale dbt project in lesson 2.6.
+We will be using the meltano project we created in module 2.6. Make sure we are not in any subfolder. The pre-requisite of this exercise is that you need to complete the exercise to create a meltano p[...]
 
 First, we will create a Dagster project and use it to orchestrate the Meltano pipelines.
 
@@ -356,12 +423,12 @@ resale_flat:
       project: #your-GCP-project-id
       threads: 1
       type: bigquery
-  target: dev
+   target: dev
 ```
 
 Please use the above format in order to be compatible with Dagster. 
 
-Then create a new Dagster project that points to the directory. Replace `#full-path-to-the-resale-flat-dbt-project-directory` with the actual project path (example: `/Users/Dev/5m-data-2.6-data-pipelines-orchestration/resale_flat`)
+Then create a new Dagster project that points to the directory. Replace `#full-path-to-the-resale-flat-dbt-project-directory` with the actual project path (example: `/Users/Dev/5m-data-2.6-data-pipeli[...]
 
 ```bash
 dagster-dbt project scaffold --project-name resale_flat_dagster --dbt-project-dir #full-path-to-the-resale-flat-dbt-project-directory
